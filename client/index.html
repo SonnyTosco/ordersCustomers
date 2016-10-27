@@ -8,12 +8,10 @@
     <script type = 'text/javascript' src = './js/script.js'>
     </script>
   </head>
-  <body>
+  <body ng-app='myApp'>
     <h1>Orders and Customers</h1>
-    <div ng-app = 'myApp'>
-      <a href = '#/'>Customers</a> || <a href = '#/orders'>Orders</a>
-      <div ng-view = ''>
+    <a href = "#/">Customers</a> || <a href = "#/orders">Orders</a>
+      <div ng-view=''>
       </div>
-    </div>
   </body>
 </html>
