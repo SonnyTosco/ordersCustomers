@@ -13,3 +13,20 @@ myApp.config(function($routeProvider){
     redirectTo: '/'
   });
 })
+
+//Factories
+myApp.factory('CustomersFactory', function($http){
+  var factory = {};
+  return factory;
+})
+
+//Client Controllers
+myApp.controller('CustomersController', function($scope, CustomersFactory){
+  $scope.addCustomer = function(){
+    customer_repack = {
+      name: $scope.new_customer.name,
+      created_at: new Date()
+    }
+    console.log(customer_repack);
+  }
+})
