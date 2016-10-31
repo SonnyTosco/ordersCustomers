@@ -17,16 +17,103 @@ myApp.config(function($routeProvider){
 //Factories
 myApp.factory('CustomersFactory', function($http){
   var factory = {};
+
+  factory.create_customer = function(info, callback){
+    $http.post('/create_customer', info).success(function(output){
+      callback(output);
+    })
+  }
+  factory.get_all = function(callback){
+    $http.get('/get_customers').success(function(output){
+      callback(output);
+    })
+  }
+  factory.delete_customer = function(info, callback){
+    console.log(info);
+    $http.post('/delete_customer', info).success(function(output){
+      callback(output);
+    })
+  }
+  return factory;
+})
+
+myApp.factory('OrdersFactory', function($http){
+  var factory = {};
+  factory.get_products = function(callback){
+    var products = [
+      {product: 'Ninja Shoes'},
+      {product: 'Ninja V Neck'},
+      {product: 'Ninja Scraper Bike'},
+      {product: 'Ninja Haircut'}
+    ];
+    callback(products);
+  }
+  factory.get_quantity = function(callback){
+    var quantity = [];
+    for(var i = 1; i<101; i++){
+      quantity.push(i);
+    };
+    callback(quantity);
+  }
+  factory.add_order = function(info, callback){
+    $http.post('/create_order', info).success(function(data){
+      callback(data);
+    })
+  }
+  factory.get_orders = function(callback){
+    $http.get('/get_orders').success(function(data){
+      callback(data);
+    })
+  }
   return factory;
 })
 
 //Client Controllers
 myApp.controller('CustomersController', function($scope, CustomersFactory){
   $scope.addCustomer = function(){
-    customer_repack = {
+    var customer_repack = {
       name: $scope.new_customer.name,
       created_at: new Date()
     }
-    console.log(customer_repack);
+    CustomersFactory.create_customer(customer_repack, function(data){
+      $scope.customers = data;
+    })
+  }
+  $scope.deleteCustomer = function(customer){
+    CustomersFactory.delete_customer(customer, function(data){
+      $scope.customers = data;
+    })
+  }
+  CustomersFactory.get_all(function(data){
+    $scope.customers = data;
+  })
+})
+
+myApp.controller('OrdersController', function($scope, CustomersFactory, OrdersFactory){
+  CustomersFactory.get_all(function(data){
+    $scope.customers = data;
+  });
+  OrdersFactory.get_products(function(data){
+    $scope.products = data;
+  })
+  OrdersFactory.get_quantity(function(data){
+    $scope.quantity = data;
+  })
+
+  OrdersFactory.get_orders(function(data){
+    $scope.orders = data;
+    console.log(data);
+  })
+
+  $scope.addOrder = function(){
+    var order_repack = {
+      customer_name: $scope.new_order.customer_name,
+      product: $scope.new_order.product,
+      quantity: $scope.new_order.quantity,
+      created_at: new Date()
+    }
+    OrdersFactory.add_order(order_repack, function(data){
+      $scope.orders = data;
+    })
   }
 })
